@@ -25,7 +25,8 @@ const MainPage = ({
     alram, 
     sensor, 
     sensing,
-    refreshData
+    refreshData,
+    model,
 }) => {
     const [currnetData, setCurrentData] = useState([]);
     const navigate = useNavigate();
@@ -209,6 +210,7 @@ const MainPage = ({
                                             weatherData={weatherData}
                                             setCurrentMain={setCurrentMain}
                                             setCurrentComponent={setCurrentComponent}
+                                            model={model}
                                         />
                                     )}
                                     {currentMain === "FishFarm" && (

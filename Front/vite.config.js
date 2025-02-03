@@ -11,9 +11,10 @@ export default defineConfig({
                 secure: false
             },
             '/focus/model': {                // 새 경로 추가
-                target: 'http://localhost:5000',  // Python FastAPI 서버
+                target: 'http://127.0.0.1:5000',  // Python FastAPI 서버
                 changeOrigin: true,
-                secure: false
+                secure: false,
+                rewrite: (path) => path.replace(/^\/focus\/model/, '')
             }
         }
     },

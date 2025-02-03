@@ -37,18 +37,25 @@ function MyFarm({ sideFarm, idx, sensing, setSensing, mySensor, alram, liveData,
 
     const updateSensing = (sensing) => {
         if (mySensor.length > 0) {
-          // mySensor 배열에서 모든 sensor_id를 추출하여 새로운 배열 생성
-          const sensorIds = mySensor.map(sensor => sensor.sensor_id);
-      
-          // sensing의 각 item의 sensor_id가 sensorIds 배열에 포함되어 있는지 확인
-          const filtered = sensing.filter(item => sensorIds.includes(item.sensor_id));
-      
-          // 각 객체에서 sensor_id 속성을 제거하고 나머지 속성만 남김
-          const updated = filtered.map(({ sensor_id, ...rest }) => rest);
-          return updated;
+            // mySensor 배열에서 모든 sensor_id를 추출하여 새로운 배열 생성
+            const sensorIds = mySensor.map(sensor => sensor.sensor_id);
+        
+            // sensing의 각 item의 sensor_id가 sensorIds 배열에 포함되어 있는지 확인
+            const filtered = sensing.filter(item => sensorIds.includes(item.sensor_id));
+        
+            // 각 객체에서 sensor_id 속성을 제거하고 sensor_res 값을 소수점 한 자리로 고정
+            const updated = filtered.map(({ sensor_id, sensor_res, ...rest }) => ({
+                ...rest,
+                // 소수점 1자리로 변환하고 항상 문자열 형태로 반환
+                sensor_res: sensor_res ? sensor_res.toFixed(1) : sensor_res
+            }));            
+          
+            return updated;
         }
         return [];
-      };
+    };
+    
+    
       
     // 모달 열기 핸들러 (선택한 센서 정보 설정)
     const handleShowModal = (sensor = null) => {
@@ -61,7 +68,6 @@ function MyFarm({ sideFarm, idx, sensing, setSensing, mySensor, alram, liveData,
                 installationDate: sensor.sensor_date || "",
                 model: sensor.sensor_model || "",
                 alertThreshold: sensor.sensor_threshold || "",
-                url: sensor.sensor_url || "",
             });
         } else {
             // 새 센서 추가 시 초기화
@@ -73,7 +79,6 @@ function MyFarm({ sideFarm, idx, sensing, setSensing, mySensor, alram, liveData,
                 installationDate: "",
                 model: "",
                 alertThreshold: "",
-                url: "",
             });
         }
         setShowModal(true);
@@ -158,7 +163,7 @@ function MyFarm({ sideFarm, idx, sensing, setSensing, mySensor, alram, liveData,
                     sensor_threshold: parseFloat(sensorData.alertThreshold),
                     farm_name: sideFarm[idx].farm_name,
                     user_email: sideFarm[idx].user_email,
-                    sensor_url: sensorData.url,
+                    sensor_url: "삭제",
                 });
                 console.log(response.data);
                 if (response.data) {
@@ -582,16 +587,16 @@ function MyFarm({ sideFarm, idx, sensing, setSensing, mySensor, alram, liveData,
                                 required
                             />
                         </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>데이터 요청 URL</Form.Label>
+                        {/* <Form.Group className="mb-3">
+                            <Form.Label>데이터 입력 요청 URL</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="url"
                                 value={sensorData.url}
                                 onChange={handleChange}
-                                placeholder="000.00.0.0/api/get"
+                                placeholder="user_email=변수1&farm_name=변수2&sensor_name=변수3&sensor_res=변수4"
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

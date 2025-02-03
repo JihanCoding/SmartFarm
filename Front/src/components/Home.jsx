@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import SliderComponent from "./SliderComponent";
 import ReLineChart from "./ReLineChart";
 
-const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
+const Home = ({ news, liveData, pastData, threeData, weatherData, model}) => {
     const [tableOp, setTableOp] = useState([]);
     const [tableTh, setTableTh] = useState([]);
     const [envData, setEnvData] = useState([]);
@@ -13,7 +13,8 @@ const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
     const [risaData, setRisaData] = useState([]);
     const [risaField, setRisaField] = useState([]);
     const [tableData, setTableData] = useState([]);
-
+    const [modelData, setModelData] = useState([]);
+    const [modelField, setModelField] = useState([]);
     useEffect(() => {
         console.log("Home (news):", news, "로드완료");
         console.log("Home (liveData):", liveData, "로드완료");
@@ -31,7 +32,7 @@ const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
             liveData.map((item) => ({
                 op_name: item.op_name,
                 observed_at: item.observed_at,
-                water_temp: item.water_temp,
+                water_temp: item.water_temp.toFixed(1),
                 status: "ACTIVE",
             }))
         );
@@ -39,6 +40,21 @@ const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
         setTableTh(["순번", "관측소명", "관측일시", "표층수온", "상태"]);
 
         const transformedData = [];
+        const modelformedData = [];
+
+        // forEach를 사용하여 데이터 변환
+        model.forecast.forEach(item => {
+            modelformedData.push({
+                key: item.date.split('-').slice(1).join('/'),
+                수온: item.temp
+            });
+        }); 
+        setModelData(modelformedData);  
+
+        setModelField([
+            { dataKey: '수온', name: '수온', color: '#e17055' },
+        ])
+
 
         // forEach를 사용하여 데이터 변환
         threeData.forEach(item => {
@@ -121,20 +137,33 @@ const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
                                                 aria-controls="overview"
                                                 aria-selected="true"
                                             >
-                                                최근 6시간 수온변화
+                                                최근 한달 수온 변화
                                             </a>
                                         </li>
-                                        <li className="nav-item">
+                                        <li className="nav-item me-2">
                                             <a
                                                 className="nav-link"
-                                                id="activities-pill"
-                                                href="#activities"
+                                                id="activities1-pill"
+                                                href="#activities1"
                                                 data-bs-toggle="tab"
                                                 role="tab"
-                                                aria-controls="activities"
+                                                aria-controls="activities1"
                                                 aria-selected="false"
                                             >
-                                                최근 30일 수온 변화
+                                                미래 한달 수온 예측
+                                            </a>
+                                        </li>
+                                        <li className="nav-item me-3">
+                                            <a
+                                                className="nav-link"
+                                                id="activities2-pill"
+                                                href="#activities2"
+                                                data-bs-toggle="tab"
+                                                role="tab"
+                                                aria-controls="activities2"
+                                                aria-selected="false"
+                                            >
+                                                최근 6시간 수온변화
                                             </a>
                                         </li>
                                     </ul>
@@ -152,16 +181,24 @@ const Home = ({ news, liveData, pastData, threeData, weatherData }) => {
                                             aria-labelledby="overview-pill"
                                         >
                                             <div className="chart-area mb-4 mb-lg-0">
-                                            <ReLineChart data = {risaData} fields={risaField}/>
+                                            <ReLineChart data = {envData} fields={envField}/>
                                             </div>
                                         </div>
                                         <div
                                             className="tab-pane fade chart-area mb-4 mb-lg-0"
-                                            id="activities"
+                                            id="activities1"
                                             role="tabpanel"
-                                            aria-labelledby="activities-pill"
+                                            aria-labelledby="activities1-pill"
                                         >
-                                            <ReLineChart data = {envData} fields={envField}/>
+                                            <ReLineChart data = {modelData} fields={modelField}/>
+                                        </div>
+                                        <div
+                                            className="tab-pane fade chart-area mb-4 mb-lg-0"
+                                            id="activities2"
+                                            role="tabpanel"
+                                            aria-labelledby="activities2-pill"
+                                        >
+                                            <ReLineChart data = {risaData} fields={risaField}/>
                                         </div>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ import {
 } from "../api/risa";
 import { getAlert, addAlert } from "../api/alert";
 import { getFarm } from "../api/farm";
+import { getModel } from "../api/model";
 import { getSensing } from "../api/sensing";
 import { getSensor } from "../api/sensor";
 import { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ const LoadingPage = () => {
     const [alram, setAlram] = useState([]);
     const [sensor, setSensor] = useState([]);
     const [sensing, setSensing] = useState([]);
+    const [model, setModel] = useState([]);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     
     useEffect(() => {
@@ -57,6 +59,7 @@ const LoadingPage = () => {
                 AlramData,
                 sensorData,
                 sensingData,
+                modelData,
             ] = await Promise.all([
                 top3News(),
                 getWeather(),
@@ -67,6 +70,7 @@ const LoadingPage = () => {
                 getAlert(),
                 getSensor(),
                 getSensing(),
+                getModel(),
             ]);
             
             setNewsTop3(newsData);
@@ -78,6 +82,7 @@ const LoadingPage = () => {
             setAlram(AlramData);
             setSensor(sensorData);
             setSensing(sensingData);
+            setModel(modelData);
             console.log("Refresh Data")
         } catch (error) {
             console.error("데이터 로드 중 오류 발생:", error);
@@ -110,6 +115,7 @@ const LoadingPage = () => {
                 alramData,
                 sensorData,
                 sensingData,
+                modelData,
             ] = await Promise.all([
                 top3News(),
                 getWeather(),
@@ -120,6 +126,7 @@ const LoadingPage = () => {
                 getAlert(),
                 getSensor(),
                 getSensing(),
+                getModel(),
             ]);
             
             setNewsTop3(newsData);
@@ -131,6 +138,7 @@ const LoadingPage = () => {
             setAlram(alramData);
             setSensor(sensorData);
             setSensing(sensingData);
+            setModel(modelData);
         } catch (error) {
             console.error("데이터 로드 중 오류 발생:", error);
         }
@@ -160,6 +168,7 @@ const LoadingPage = () => {
                         sensor={JSON.parse(JSON.stringify(sensor))}
                         sensing={JSON.parse(JSON.stringify(sensing))}
                         refreshData = {refreshData}
+                        model = {JSON.parse(JSON.stringify(model))}
                     />
                 )
             )}

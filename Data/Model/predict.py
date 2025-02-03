@@ -6,9 +6,16 @@ from datetime import timedelta
 from tensorflow.keras.models import load_model
 import joblib
 from sqlalchemy import create_engine
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
-
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # React 개발 서버 주소
+    allow_credentials=True,
+    allow_methods=["*"],                      # 모든 HTTP 메소드 허용 (GET, POST, PUT 등)
+    allow_headers=["*"],                      # 모든 헤더 허용
+)
 # -----------------------------------------------------------------------------
 # 1. 모델과 스케일러를 서버 시작 시 미리 로드
 # -----------------------------------------------------------------------------
@@ -44,7 +51,7 @@ except Exception as e:
 # -----------------------------------------------------------------------------
 # 3. 예측 API 엔드포인트 (/forecast)
 # -----------------------------------------------------------------------------
-@app.get("/focus/model/forecast")
+@app.get("/forecast")
 def forecast():
     # 3-1. DB에서 데이터 로드 (예시: 전체 데이터 조회)
     try:
@@ -149,4 +156,4 @@ def forecast():
             "temp": round(temp, 1)
         })
 
-    return {"forecast": forecast_list}
+    return JSONResponse(content={"forecast": forecast_list})

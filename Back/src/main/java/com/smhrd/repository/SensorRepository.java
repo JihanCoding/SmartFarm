@@ -50,4 +50,13 @@ public interface SensorRepository extends JpaRepository<Sensor, Integer> {
 
     @Query("SELECT s.sensor_url, s.sensor_id FROM Sensor s")
     List<Sensor> findAllSensorUrls();
+
+    @Query(value = "SELECT sensor_id FROM tb_sensor " +
+                   "WHERE user_email = :user_email AND farm_name = :farm_name AND sensor_name = :sensor_name", 
+           nativeQuery = true)
+    Integer findSensorId(
+            @Param("user_email") String user_email,
+            @Param("farm_name") String farm_name,
+            @Param("sensor_name") String sensor_name
+    );
 }

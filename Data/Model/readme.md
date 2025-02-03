@@ -13,4 +13,4 @@
 4. uvicorn predict:app --host 0.0.0.0 --port 5000 --reload
 
 <!-- 예측 값 요청 URL -->
-5. http://localhost:5000/forecast
+5. http://localhost:5000/focus/model/forecast

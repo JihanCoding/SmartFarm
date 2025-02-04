@@ -42,6 +42,9 @@ const Home = ({ news, liveData, pastData, threeData, weatherData, model}) => {
         const transformedData = [];
         const modelformedData = [];
 
+        if(!model){
+            refreshData();
+        }
         // forEach를 사용하여 데이터 변환
         model.forecast.forEach(item => {
             modelformedData.push({

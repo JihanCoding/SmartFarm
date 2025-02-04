@@ -73,6 +73,8 @@ const MainPage = ({
     const addNewAlert = async () => {
       if (isProcessing) return; // 이미 실행 중이면 바로 리턴
       isProcessing = true;
+      
+      if(!sensor) return;
       try {
         // 기존 로직 실행
         const data = sensing.filter((item) =>
@@ -211,6 +213,7 @@ const MainPage = ({
                                             setCurrentMain={setCurrentMain}
                                             setCurrentComponent={setCurrentComponent}
                                             model={model}
+                                            refreshData={refreshData}
                                         />
                                     )}
                                     {currentMain === "FishFarm" && (
